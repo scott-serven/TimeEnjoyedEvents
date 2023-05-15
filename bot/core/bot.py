@@ -23,17 +23,12 @@ SOFTWARE.
 """
 import logging
 import pathlib
-import tomllib
 
 import aiohttp
 import discord
 from discord.ext import commands
 
 import universal
-
-
-with open('../config.toml', 'rb') as fp:
-    CONFIG = tomllib.load(fp)
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -50,7 +45,7 @@ class Bot(commands.Bot):
         self.session = session
 
         super().__init__(intents=intents, command_prefix=commands.when_mentioned_or('?? ', '??'))  # type: ignore
-        discord.utils.setup_logging(handler=universal.Handler(level=CONFIG['LOGGING']['level']))
+        discord.utils.setup_logging(handler=universal.Handler(level=universal.CONFIG['LOGGING']['level']))
 
     async def setup_hook(self) -> None:
 

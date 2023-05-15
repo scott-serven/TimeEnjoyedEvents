@@ -27,11 +27,13 @@ import aiohttp
 
 import core
 
+import universal
+
 
 async def run() -> None:
     async with aiohttp.ClientSession() as session:
         async with core.Bot(session=session) as bot:
-            await bot.start(core.CONFIG['TOKENS']['bot'])
+            await bot.start(universal.CONFIG['TOKENS']['bot'])
 
 
 try:
