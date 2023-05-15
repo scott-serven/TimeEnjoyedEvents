@@ -11,3 +11,6 @@ dsn = 'postgres://user:password@localhost:5432/database'
 # 10 = DEBUG
 [LOGGING]
 level = 20
+
+[SERVER]
+debug = true
