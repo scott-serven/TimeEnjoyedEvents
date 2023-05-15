@@ -23,6 +23,8 @@ SOFTWARE.
 """
 import asyncio
 import logging
+import uuid
+from typing import Any
 
 from starlette.applications import Starlette
 from starlette.requests import Request
@@ -44,10 +46,11 @@ class Server(Starlette):
 
     def __init__(self) -> None:
         self.database: universal.Database | None = None
-        self.commit_queue: asyncio.Queue = asyncio.Queue()
+        self.commit_queues: dict[str, asyncio.Queue] = {}
 
         routes: list[Route] = [
-            Route('/github/{team_id:int}', self.receive_github, methods=['POST'])
+            Route('/github/commit_feed', self.event_commit, methods=['GET']),
+            Route('/github/{team_id:int}/{team_token:str}', self.receive_github, methods=['POST'])
         ]
 
         super().__init__(debug=universal.CONFIG['SERVER']['debug'], routes=routes, on_startup=[self.on_ready])
@@ -57,8 +60,36 @@ class Server(Starlette):
 
         logger.info('Successfully started API Server.')
 
-    async def event_commit(self, request: Request) -> None:
-        pass
+    async def publisher_commit(self, request: Request, id_: str, /) -> dict[str, Any]:
+        queue: asyncio.Queue = self.commit_queues[id_]
+
+        while True:
+            try:
+                payload: dict[str, Any] = await queue.get()
+                yield payload
+            except asyncio.CancelledError:
+                break
+
+            if await request.is_disconnected():
+                break
+
+        del self.commit_queues[id_]
+
+    async def event_commit(self, request: Request) -> EventSourceResponse:
+        id_: str = str(uuid.uuid4())
+
+        self.commit_queues[id_] = asyncio.Queue()
+        return EventSourceResponse(self.publisher_commit(request, id_))
 
     async def receive_github(self, request: Request) -> Response:
-        pass
+        # This is purely here for testing currently...
+        # In the future, GitHub will send webhook payloads to this route...
+        # Which will be forwarded to all listening to clients, similar to a websocket...
+        # This will need to check the database for team ID and token...
+        # If they don't match we know this is a fake request...
+        data: dict[str, Any] = await request.json()
+
+        for queue in self.commit_queues.values():
+            await queue.put(data)
+
+        return Response(status_code=200)
