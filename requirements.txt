@@ -1,3 +1,6 @@
-colorama
+colorama==0.4.6
 discord.py==2.2.3
 aiohttp>=3.7.4,<4
+starlette==0.26.1
+uvicorn==0.22.0
+sse-starlette==1.6.0
