@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS testing(
+    uuid SERIAL PRIMARY KEY
+);
