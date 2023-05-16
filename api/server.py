@@ -26,6 +26,7 @@ import logging
 import uuid
 from typing import Any
 
+import asyncpg
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
@@ -87,7 +88,17 @@ class Server(Starlette):
         # Which will be forwarded to all listening to clients, similar to a websocket...
         # This will need to check the database for team ID and token...
         # If they don't match we know this is a fake request...
-        data: dict[str, Any] = await request.json()
+        id_: int = request.path_params['team_id']
+        token: str = request.path_params['team_token']
+
+        team: asyncpg.Record = await self.database.fetch_team(id_=id_)
+        if not team:
+            return Response(status_code=404)
+
+        if team['token'] != token:
+            return Response(status_code=401)
+
+        data = await request.json()
 
         for queue in self.commit_queues.values():
             await queue.put(data)
