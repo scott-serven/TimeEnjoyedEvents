@@ -43,6 +43,7 @@ class Bot(commands.Bot):
         intents.members = True
 
         self.session = session
+        self.database: universal.Database | None = None
 
         super().__init__(intents=intents, command_prefix=commands.when_mentioned_or('?? ', '??'))  # type: ignore
         discord.utils.setup_logging(handler=universal.Handler(level=universal.CONFIG['LOGGING']['level']))
@@ -54,6 +55,8 @@ class Bot(commands.Bot):
             await self.load_extension(module)
 
         logger.info(f'Loaded ({len(modules)}) modules.')
+
+        self.database = await universal.Database.setup()
 
     async def on_ready(self) -> None:
         logger.info(f'Logged in as {self.user} (ID: {self.user.id})')
