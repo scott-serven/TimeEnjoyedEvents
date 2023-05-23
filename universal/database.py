@@ -31,12 +31,8 @@ import asyncpg
 from .logger import Handler
 
 
-try:
-    with open('../config.toml', 'rb') as fp:
-        CONFIG: dict[str, Any] = tomllib.load(fp)
-except FileNotFoundError:
-    with open('config.toml', 'rb') as fp:
-        CONFIG: dict[str, Any] = tomllib.load(fp)
+with open('../config.toml', 'rb') as fp:
+    CONFIG: dict[str, Any] = tomllib.load(fp)
 
 
 logging_level: int = CONFIG['LOGGING']['level']
@@ -59,12 +55,8 @@ class Database:
         self_._pool = await asyncpg.create_pool(CONFIG['DATABASE']['dsn'])
 
         async with self_._pool.acquire() as connection:
-            try:
-                with open('../SCHEMA.sql', 'r') as schema:
-                    await connection.execute(schema.read())
-            except FileNotFoundError:
-                with open('SCHEMA.sql', 'r') as schema:
-                    await connection.execute(schema.read())
+            with open('../SCHEMA.sql', 'r') as schema:
+                await connection.execute(schema.read())
 
         logger.info('Completed Database Setup.')
 

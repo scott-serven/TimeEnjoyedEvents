@@ -20,10 +20,4 @@ pip install -U -r requirements.txt
 
 
 ## Running
-
-**Option 1:**
-  - Run all services together by running `launcher.py` in the root directory.
-
-**Option 2:**
-  - Run each service separately by running the respective `launcher.py` in each directory.
-    - Please **DO NOT** run `launcher.py` from the root directory if you choose to do this.
+- Run each service separately by running the respective `launcher.py` in each directory.
