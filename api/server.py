@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 import asyncio
+import json
 import logging
 import uuid
 from typing import Any
@@ -31,6 +32,8 @@ from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 from starlette.routing import Route
+from starlette.middleware import Middleware
+from starlette.middleware.cors import CORSMiddleware
 from sse_starlette.sse import EventSourceResponse
 
 import universal
@@ -54,7 +57,12 @@ class Server(Starlette):
             Route('/github/{team_id:int}/{team_token:str}', self.receive_github, methods=['POST'])
         ]
 
-        super().__init__(debug=universal.CONFIG['SERVER']['debug'], routes=routes, on_startup=[self.on_ready])
+        super().__init__(
+            debug=universal.CONFIG['SERVER']['debug'],
+            routes=routes,
+            middleware=[Middleware(CORSMiddleware, allow_origins=['*'])],
+            on_startup=[self.on_ready]
+        )
 
     async def on_ready(self) -> None:
         self.database = await universal.Database.setup()
@@ -67,7 +75,7 @@ class Server(Starlette):
         while True:
             try:
                 payload: dict[str, Any] = await queue.get()
-                yield payload
+                yield json.dumps(payload)
             except asyncio.CancelledError:
                 break
 
@@ -83,11 +91,6 @@ class Server(Starlette):
         return EventSourceResponse(self.publisher_commit(request, id_))
 
     async def receive_github(self, request: Request) -> Response:
-        # This is purely here for testing currently...
-        # In the future, GitHub will send webhook payloads to this route...
-        # Which will be forwarded to all listening to clients, similar to a websocket...
-        # This will need to check the database for team ID and token...
-        # If they don't match we know this is a fake request...
         id_: int = request.path_params['team_id']
         token: str = request.path_params['team_token']
 
@@ -98,9 +101,19 @@ class Server(Starlette):
         if team['token'] != token:
             return Response(status_code=401)
 
-        data = await request.json()
+        data: dict[str, Any] = await request.json()
+        to_send: dict[str, Any] = {'team': {'id': team['id'], 'name': team['name']}}
+
+        sender: dict[str, str] = {'name': data['sender']['login'], 'avatar': data['sender']['avatar_url']}
+        commits: list[dict[str, str]] = []
+
+        for commit in data['commits']:
+            commit_: dict[str, str] = {'author': commit['author']['name'], 'message': commit['message']}
+            commits.append(commit_)
+
+        to_send.update(sender=sender, commits=commits[0:5], commit_length=len(commits))
 
         for queue in self.commit_queues.values():
-            await queue.put(data)
+            await queue.put(to_send)
 
         return Response(status_code=200)
