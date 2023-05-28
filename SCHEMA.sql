@@ -21,3 +21,14 @@ CREATE TABLE IF NOT EXISTS members(
     registered TIMESTAMP DEFAULT (now() at time zone 'utc'),
     FOREIGN KEY (team_id) REFERENCES teams ON DELETE SET NULL (team_id)
 );
+
+
+CREATE TABLE IF NOT EXISTS error_log(
+    id SERIAL PRIMARY KEY,
+    channel BIGINT,
+    invoker BIGINT,
+    command TEXT,
+    error TEXT,
+    traceback TEXT,
+    created TIMESTAMP DEFAULT (now() at time zone 'utc')
+);
