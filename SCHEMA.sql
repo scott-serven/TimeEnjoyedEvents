@@ -18,5 +18,6 @@ CREATE TABLE IF NOT EXISTS members(
     timezone INTERVAL,
     solo BOOLEAN,
     team_id BIGINT,
-    registered TIMESTAMP DEFAULT (now() at time zone 'utc')
+    registered TIMESTAMP DEFAULT (now() at time zone 'utc'),
+    FOREIGN KEY (team_id) REFERENCES teams ON DELETE SET NULL (team_id)
 );
