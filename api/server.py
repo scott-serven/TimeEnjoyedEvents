@@ -102,7 +102,7 @@ class Server(Starlette):
             return Response(status_code=401)
 
         data: dict[str, Any] = await request.json()
-        to_send: dict[str, Any] = {'team': {'id': team['id'], 'name': team['name']}}
+        to_send: dict[str, Any] = {'team': {'id': team['team_id'], 'name': team['name']}}
 
         sender: dict[str, str] = {'name': data['sender']['login'], 'avatar': data['sender']['avatar_url']}
         commits: list[dict[str, str]] = []
