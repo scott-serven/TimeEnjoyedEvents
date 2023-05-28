@@ -94,7 +94,7 @@ class Server(Starlette):
         id_: int = request.path_params['team_id']
         token: str = request.path_params['team_token']
 
-        team: asyncpg.Record = await self.database.fetch_team(id_=id_)
+        team: asyncpg.Record = await self.database.fetch_team(team_id=id_)
         if not team:
             return Response(status_code=404)
 
