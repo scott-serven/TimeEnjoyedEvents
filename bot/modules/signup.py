@@ -33,7 +33,10 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-import core
+try:
+    from .core import *
+except ImportError:
+    from core import *
 
 import universal
 
@@ -73,7 +76,7 @@ def is_manager():
         if interaction.user.get_role(MANAGER_ID):
             return True
 
-        raise core.NotManagerError
+        raise NotManagerError
     return app_commands.check(predicate)
 
 
@@ -90,7 +93,7 @@ def is_team_owner_or_manager():
         if interaction.user.id in owners:
             return True
 
-        raise core.NotTeamOwnerError
+        raise NotTeamOwnerError
     return app_commands.check(predicate)
 
 
@@ -104,35 +107,35 @@ def name_validator():
 
         if len(name) > 25:
             message: str = 'Your team name can not be over 25 characters long.'
-            raise core.NameViolationError(message)
+            raise NameViolationError(message)
 
         if not NAME_VALIDATION.fullmatch(name):
             message: str = 'Your team name can only contain letters, spaces, numbers and underscores.'
-            raise core.NameViolationError(message)
+            raise NameViolationError(message)
 
         teams: list[asyncpg.Record] = await interaction.client.database.fetch_teams()
         team_names: list[str] = [t['name'].lower() for t in teams]
 
         if name.lower() in team_names:
             message: str = f'A team with the name: `{name}` already exists. Please try a new name and try again.'
-            raise core.NameViolationError(message)
+            raise NameViolationError(message)
 
         return True
     return app_commands.check(predicate)
 
 
-async def update_backend(bot: core.Bot, /) -> None:
+async def update_backend(bot: Bot, /) -> None:
     headers: dict[str, str] = {'Authorization': universal.CONFIG['TOKENS']['backend']}
     url: str = 'https://codejam.timeenjoyed.dev/api/teams/update'
 
     try:
         async with bot.session.post(url, headers=headers) as resp:
             if resp.status != 200:
-                core.logger.warning(f'Unable to reach backend server. Failed with status code: {resp.status}')
+                logger.warning(f'Unable to reach backend server. Failed with status code: {resp.status}')
             else:
-                core.logger.info('Successfully updated backend server.')
+                logger.info('Successfully updated backend server.')
     except aiohttp.ClientConnectorError:
-        core.logger.warning('Unable to reach backend server. Fatal exception occurred.')
+        logger.warning('Unable to reach backend server. Fatal exception occurred.')
 
 
 class SignupButtonSelect(discord.ui.Select):
@@ -212,20 +215,20 @@ class SignupSelectView(discord.ui.View):
         self.all_done: bool = False
 
         self.timezone_s = SignupButtonSelect(
-            core.timezones,
+            timezones,
             placeholder='Please select your timezone...',
             row=0,
             id_='TZSELECT'
         )
         self.languages_s = SignupButtonSelect(
-            core.languages,
+            languages,
             placeholder='Please select your preferred languages...',
             max_selects=5,
             row=1,
             id_='LANGSELECT'
         )
         self.solo_s = SignupButtonSelect(
-            core.preferences,
+            preferences,
             placeholder='Please select your team preferences...',
             max_selects=1,
             row=2,
@@ -338,7 +341,7 @@ class Signup(commands.Cog):
 
     group = app_commands.Group(name="team", description="Team Management related commands")
 
-    def __init__(self, bot: core.Bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
 
     async def cog_load(self) -> None:
@@ -362,7 +365,7 @@ class Signup(commands.Cog):
         if await interaction.client.database.fetch_member(member_id=interaction.user.id):
             return True
 
-        raise core.NotRegisteredError
+        raise NotRegisteredError
 
     async def cog_app_command_error(
             self,
@@ -386,19 +389,19 @@ class Signup(commands.Cog):
         else:
             send = interaction.response.send_message
 
-        if isinstance(error, core.NotRegisteredError):
+        if isinstance(error, NotRegisteredError):
             message: str = 'You need to be registered for the CodeJam to use this command.'
             await send(message, ephemeral=True)
 
-        elif isinstance(error, core.NotManagerError):
+        elif isinstance(error, NotManagerError):
             message: str = 'Only CodeJam Managers are able to use this command.'
             await send(message, ephemeral=True)
 
-        elif isinstance(error, core.NotTeamOwnerError):
+        elif isinstance(error, NotTeamOwnerError):
             message: str = 'Only Team Owners are able to use this command.'
             await send(message, ephemeral=True)
 
-        elif isinstance(error, core.NameViolationError):
+        elif isinstance(error, NameViolationError):
             await send(error.message, ephemeral=True)
 
         elif isinstance(error, app_commands.CommandOnCooldown):
@@ -438,7 +441,7 @@ class Signup(commands.Cog):
             await channel.send(f'Exception Log **(ID: `{id_}`)**: **{name}** - `{message}` | {advice}')
 
             # Log that an error occurred in the bot logs...
-            core.logger.warning(f'An exception was logged to the database. ID: {id_}')
+            logger.warning(f'An exception was logged to the database. ID: {id_}')
 
     async def fetch_team_by_member_or_channel(self, interaction: discord.Interaction, /) -> list[asyncpg.Record] | None:
         """This allows CodeJam Managers to execute commands in Team Channels."""
@@ -857,5 +860,5 @@ class Signup(commands.Cog):
         await ctx.send(f'Your message ID: `{message.id}`')
 
 
-async def setup(bot: core.Bot) -> None:
+async def setup(bot: Bot) -> None:
     await bot.add_cog(Signup(bot=bot))

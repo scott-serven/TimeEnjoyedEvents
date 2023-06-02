@@ -26,12 +26,15 @@ from typing import Literal
 import discord
 from discord.ext import commands
 
-import core
+try:
+    from .core import *
+except ImportError:
+    from core import *
 
 
 class Admin(commands.Cog):
 
-    def __init__(self, bot: core.Bot) -> None:
+    def __init__(self, bot: Bot) -> None:
         self.bot = bot
 
     @commands.command()
@@ -76,5 +79,5 @@ class Admin(commands.Cog):
         await ctx.send(f"Synced the tree to {ret} guild(s).")
 
 
-async def setup(bot: core.Bot) -> None:
+async def setup(bot: Bot) -> None:
     await bot.add_cog(Admin(bot))

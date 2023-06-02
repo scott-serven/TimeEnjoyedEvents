@@ -25,14 +25,17 @@ import asyncio
 
 import aiohttp
 
-import core
+try:
+    from .core import *
+except ImportError:
+    from core import *
 
 import universal
 
 
 async def run() -> None:
     async with aiohttp.ClientSession() as session:
-        async with core.Bot(session=session) as bot:
+        async with Bot(session=session) as bot:
             await bot.start(universal.CONFIG['TOKENS']['bot'])
 
 
