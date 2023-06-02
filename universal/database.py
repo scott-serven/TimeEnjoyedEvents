@@ -63,10 +63,12 @@ class Database:
             # We have to do this for testing purposes, unfortunately...
             try:
                 with open('../SCHEMA.sql', 'r') as schema:
-                    await connection.execute(schema.read())
+                    sql: str = schema.read()
             except FileNotFoundError:
                 with open('SCHEMA.sql', 'r') as schema:
-                    await connection.execute(schema.read())
+                    sql: str = schema.read()
+
+            await connection.execute(sql)
 
         logger.info('Completed Database Setup.')
 
