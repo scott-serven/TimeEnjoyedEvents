@@ -33,7 +33,7 @@ feed.onmessage = async (ev) => {
         const members = data[team];
 
         if (team === "null") {
-            team = '~( No Current Team )~';
+            team = 'No Current Team';
         }
 
         const team_id = team.replace(/\s+/g, '-').toLowerCase();
