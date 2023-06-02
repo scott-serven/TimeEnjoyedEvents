@@ -117,6 +117,11 @@ class Server(Starlette):
         data: dict[str, Any] = await request.json()
         to_send: dict[str, Any] = {'team': {'name': team['name']}}
 
+        try:
+            data['commits']
+        except KeyError:
+            return Response(status_code=200)
+
         sender: dict[str, str] = {'name': data['sender']['login'], 'avatar': data['sender']['avatar_url']}
         commits: list[dict[str, str]] = []
 
