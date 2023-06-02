@@ -26,7 +26,10 @@ import asyncio
 import discord
 import uvicorn
 
-from server import Server
+try:
+    from server import Server
+except ImportError:
+    from .server import Server
 
 import universal
 
