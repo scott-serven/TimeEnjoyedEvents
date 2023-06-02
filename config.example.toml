@@ -1,5 +1,6 @@
 [TOKENS]
 bot = ''
+backend = ''
 
 [DATABASE]
 dsn = 'postgres://user:password@localhost:5432/database'
@@ -15,3 +16,6 @@ level = 20
 [SERVER]
 port = 2750
 debug = true
+
+[BOT]
+view = 0
