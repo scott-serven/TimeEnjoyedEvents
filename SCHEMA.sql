@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS teams(
     created TIMESTAMP DEFAULT (now() at time zone 'utc')
 );
 
-
 CREATE TABLE IF NOT EXISTS members(
     member_id BIGINT PRIMARY KEY,
     languages INT[],
@@ -19,9 +18,8 @@ CREATE TABLE IF NOT EXISTS members(
     solo BOOLEAN,
     team_id BIGINT,
     registered TIMESTAMP DEFAULT (now() at time zone 'utc'),
-    FOREIGN KEY (team_id) REFERENCES teams ON DELETE SET NULL (team_id)
+    FOREIGN KEY (team_id) REFERENCES teams (team_id) ON DELETE SET NULL
 );
-
 
 CREATE TABLE IF NOT EXISTS error_log(
     id SERIAL PRIMARY KEY,
