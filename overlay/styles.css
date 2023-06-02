@@ -1,0 +1,83 @@
+@font-face {
+    font-family: 'Hubot Sans';
+    src:
+            url('Hubot-Sans.woff2') format('woff2 supports variations'),
+            url('Hubot-Sans.woff2') format('woff2-variations');
+    font-weight: 200 900;
+    font-stretch: 75% 125%;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Hubot Sans', sans-serif;
+}
+
+body {
+    background-color: transparent;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+    margin-left: 1rem;
+    height: calc(100% - 1rem);
+    justify-content: flex-start;
+    animation:deploy 2s;
+}
+
+.githubCardWrapper {
+    display: flex;
+    background-color: #f5f5f5;
+    color: #333;
+    border-radius: 10px;
+    min-width: 20rem;
+    width: fit-content;
+    min-height: 8rem;
+    max-height: fit-content;
+    padding: 1rem;
+    transform: translateX(calc(-100% + 1rem));
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
+}
+
+.githubCard {
+    display: flex;
+    flex-direction: column;
+}
+
+.githubCardImage {
+    height: 4rem;
+    width: auto;
+    align-self: center;
+    margin-left: 1rem;
+}
+
+.githubCardWrapper.active {
+    transform: translateX(0%);
+}
+
+.header {
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+}
+
+.header > span {
+    margin-left: 1rem;
+}
+
+.authorAvatar {
+    height: 48px;
+    width: auto;
+    border-radius: 24px;
+}
+
+.commits {
+    display: flex;
+    flex-direction: column;
+    font-size: small;
+    margin-top: 1rem;
+}
+
