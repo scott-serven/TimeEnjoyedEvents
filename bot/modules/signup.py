@@ -27,6 +27,7 @@ import re
 import traceback
 from typing import Any, Union
 
+import aiohttp
 import asyncpg
 import discord
 from discord import app_commands
@@ -118,6 +119,20 @@ def name_validator():
 
         return True
     return app_commands.check(predicate)
+
+
+async def update_backend(bot: core.Bot, /) -> None:
+    headers: dict[str, str] = {'Authorization': universal.CONFIG['TOKENS']['backend']}
+    url: str = 'https://codejam.timeenjoyed.dev/api/teams/update'
+
+    try:
+        async with bot.session.post(url, headers=headers) as resp:
+            if resp.status != 200:
+                core.logger.warning(f'Unable to reach backend server. Failed with status code: {resp.status}')
+            else:
+                core.logger.info('Successfully updated backend server.')
+    except aiohttp.ClientConnectorError:
+        core.logger.warning('Unable to reach backend server. Fatal exception occurred.')
 
 
 class SignupButtonSelect(discord.ui.Select):
@@ -315,6 +330,8 @@ class SignupView(discord.ui.View):
         await interaction.delete_original_response()
         await interaction.followup.send(message, ephemeral=True)
 
+        await update_backend(interaction.client)
+
 
 class Signup(commands.Cog):
     """Signup Cog. This holds all the Application Commands for the Signup/Management of the CodeJam."""
@@ -325,6 +342,8 @@ class Signup(commands.Cog):
         self.bot = bot
 
     async def cog_load(self) -> None:
+        await update_backend(self.bot)
+
         view: int = universal.CONFIG['BOT']['view']
         if view == 0:
             return
@@ -559,6 +578,8 @@ class Signup(commands.Cog):
         # We need to send this in order for the command to know it's done...
         await interaction.followup.send('Successfully created team!', ephemeral=True)
 
+        await update_backend(self.bot)
+
     @group.command(name='leave', description='Leave your current CodeJam team')
     @app_commands.checks.cooldown(1, 60 * 60)
     async def leave_team(self, interaction: discord.Interaction) -> None:
@@ -602,6 +623,8 @@ class Signup(commands.Cog):
             except discord.HTTPException:
                 pass
 
+            await update_backend(self.bot)
+
             return
 
         if interaction.user.id == team_members[0]['owner']:
@@ -623,6 +646,8 @@ class Signup(commands.Cog):
             await interaction.followup.send(f'Successfully left the team: `{team["name"]}`')
         except discord.HTTPException:
             pass
+
+        await update_backend(self.bot)
 
     @group.command(name='join', description='Join a CodeJam team with an invite code')
     @app_commands.checks.cooldown(3, 60 * 10)
@@ -666,6 +691,8 @@ class Signup(commands.Cog):
         await interaction.followup.send(message, ephemeral=True)
 
         await text.send(f'{interaction.user.mention} has just joined the team.', silent=True)
+
+        await update_backend(self.bot)
 
     @group.command(name='invite', description='Generate an invite for someone to join your team')
     async def invite(self, interaction: discord.Interaction) -> None:
