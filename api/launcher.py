@@ -21,6 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+import asyncio
+
+import discord
 import uvicorn
 
 from server import Server
@@ -28,6 +31,24 @@ from server import Server
 import universal
 
 
+async def main(client_: discord.Client, /) -> None:
+
+    async with client:
+
+        # Start the backend server...
+        config = uvicorn.Config("__main__:app", port=universal.CONFIG['SERVER']['port'], log_level="info")
+        server = uvicorn.Server(config)
+        server_task: asyncio.Task = asyncio.create_task(server.serve())
+
+        # Start the discord client loop, blocking until it closes...
+        await client_.start(token=universal.CONFIG['TOKENS']['bot'])
+
+
 if __name__ == '__main__':
-    app: Server = Server()
-    uvicorn.run("__main__:app", host='0.0.0.0', port=universal.CONFIG['SERVER']['port'])
+    intents: discord.Intents = discord.Intents.default()
+    intents.members = True
+
+    client: discord.Client = discord.Client(intents=intents)
+    app: Server = Server(client=client)
+
+    asyncio.run(main(client))
