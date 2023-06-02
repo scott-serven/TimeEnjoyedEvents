@@ -21,6 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from .bot import Bot, logger
-from .exceptions import *
-from .utils import *
+from discord.app_commands import CheckFailure
+
+
+__all__ = (
+    'NotRegisteredError',
+    'NotManagerError',
+    'NotTeamOwnerError',
+    'AlreadyRegisteredError',
+    'NameViolationError'
+)
+
+
+class NotRegisteredError(CheckFailure):
+    """Exception raised when a user tries to use a CodeJam command when not registered."""
+    pass
+
+
+class NotManagerError(CheckFailure):
+    """Exception raised when a user tries to use a CodeJam command that is Manager restricted."""
+    pass
+
+
+class NotTeamOwnerError(CheckFailure):
+    """Exception raised when a user tries to use a CodeJam command that is Team Owner restricted."""
+    pass
+
+
+class AlreadyRegisteredError(CheckFailure):
+    """Exception raised when a user tires to register when already registered."""
+    pass
+
+
+class NameViolationError(CheckFailure):
+    """Exception raised when team name validation fails."""
+
+    def __init__(self, message: str):
+        self.message = message
