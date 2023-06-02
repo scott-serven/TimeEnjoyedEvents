@@ -45,8 +45,13 @@ class Bot(commands.Bot):
         self.session = session
         self.database: universal.Database | None = None
 
-        super().__init__(intents=intents, command_prefix=commands.when_mentioned_or('?? ', '??'))  # type: ignore
+        # type: ignore
+        super().__init__(help_command=None, intents=intents, command_prefix=commands.when_mentioned_or('?? ', '??'))
         discord.utils.setup_logging(handler=universal.Handler(level=universal.CONFIG['LOGGING']['level']))
+
+    async def on_command_error(self, context: commands.Context, exception: commands.CommandError, /) -> None:
+        if isinstance(exception, commands.CommandNotFound):
+            return
 
     async def setup_hook(self) -> None:
 
