@@ -36,7 +36,7 @@ from discord.ext import commands
 try:
     from .core import *
 except ImportError:
-    from core import *
+    from bot.core import *
 
 import universal
 
@@ -840,8 +840,12 @@ class Signup(commands.Cog):
     async def send_signup(self, ctx: commands.Context) -> None:
         channel: discord.TextChannel = ctx.guild.get_channel(SIGNUP_CHANNEL)
 
-        with open('./resources/signup_message.txt', 'r', encoding='UTF-8') as fp:
-            desc: str = fp.read()
+        try:
+            with open('../signup_message.txt', 'r', encoding='UTF-8') as fp:
+                desc: str = fp.read()
+        except FileNotFoundError:
+            with open('signup_message.txt', 'r', encoding='UTF-8') as fp:
+                desc: str = fp.read()
 
         embed = discord.Embed(colour=0xF0B7B1)
         embed.title = "TimeEnjoyed CodeJam!"

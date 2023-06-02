@@ -53,11 +53,12 @@ class Bot(commands.Bot):
         if isinstance(exception, commands.CommandNotFound):
             return
 
-        print(exception)
+        logger.warning(f'Exception in command: {exception}')
 
     async def setup_hook(self) -> None:
+        modules: list[str] = [f'{p.parent}.{p.stem}' for p in pathlib.Path('bot/modules').glob('*.py')]
+        modules: list[str] = [s.replace('/', '.').replace('\\', '.') for s in modules]
 
-        modules: list[str] = [f'{p.parent}.{p.stem}' for p in pathlib.Path('modules').glob('*.py')]
         for module in modules:
             await self.load_extension(module)
 

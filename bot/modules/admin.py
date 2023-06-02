@@ -29,7 +29,7 @@ from discord.ext import commands
 try:
     from .core import *
 except ImportError:
-    from core import *
+    from bot.core import *
 
 
 class Admin(commands.Cog):
