@@ -1,0 +1,41 @@
+**About CodeJam:**
+__Who__: Anyone who wants to code!
+
+__Why__: We thought it would be fun to host community challenges, so welcome to our first ever Codejam!
+The goal of this codejam is just to try making things with others. Sharpen our collaborative and creativity skills, and hopefully enjoy the process.
+
+__What__: Without knowing the theme, the category for CodeJam 2023 is Twitch-integration. Think chat-bot, stream overlay, Twitch extension, browser extension, IDE extension... but something that can be used for chatters or streamers. There will be a theme however, which will be released on `July 7th`.
+
+__Purpose of theme__: Whatever you end up making, make sure you use the provided theme! The more creative you get with the theme, the better!
+
+__When__:
+- Signups: June 1st - July 6th
+- Start: July 7 (theme released)
+- Ends: July 16th (submit your project!)
+
+__Where__: TimeEnjoyed's Discord/Twitch community
+
+**Signing Up:**
+In order to make collaborating easier, when you click 'Signup', you will get a message that prompts you to select your Timezone, Programming Language preferences, and Team Size preference (solo or group).
+
+**Next Steps:**
+- If you're entering solo, just create a team for yourself by July 7th.
+- If you want to be part of a team, please feel free to self-organize in <#1113869560706244730>. If you'd like our assistance, any <@&1099191306359672894> can help find a team for you.
+
+**Creating Team (solo & group):**
+Once you've found team members, please designate a team leader, someone who will be in charge of creating the team. When a team is created, a new text channel and voice channel will be created as a meeting ground for everyone in the team. These two channels will be accessible to team members only (as well as <@&1099191306359672894>).
+- To create a team: The team leader will type `/team create <team name>` anywhere in this server.
+- Soloists, go ahead and also create a team with `/team create <team name>` by July 7th.
+- Note: The team name can **not** be changed. To leave the the team use `/team leave`. There are very strict rate-limits on creating and leaving teams. Please be certain of your name before creating a team.
+
+**Commands:**
+`/team create <team name>` - Creates a team with the given name.
+`/team invite` - Retrieves your teams unique invite code.
+`/team join <code>` - Join a team with the provided invite code.
+`/team leave` - Leave your current team.
+
+**On July 7th:**
+- CodeJam theme will be released
+- We will create GitHub repo's for your team to use, soloists included.
+
+Feel free to DM anyone in <@&1099191306359672894> for help or questions!
