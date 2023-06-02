@@ -61,11 +61,11 @@ class Server(Starlette):
         self.team_feed_queues: dict[str, asyncio.Queue] = {}
 
         routes: list[Route] = [
-            Route('/github/commit_feed', self.event_commit, methods=['GET']),
-            Route('/github/{team_id:int}/{team_token:str}', self.receive_github, methods=['POST']),
-            Route('/teams/feed', self.team_feed, methods=['GET']),
-            Route('/teams/update', self.receive_team_feed_update, methods=['POST']),
-            Route('/teams/feed_event', self.event_team_feed, methods=['GET']),
+            Route('/api/github/commit_feed', self.event_commit, methods=['GET']),
+            Route('/api/github/{team_id:int}/{team_token:str}', self.receive_github, methods=['POST']),
+            Route('/api/teams/feed', self.team_feed, methods=['GET']),
+            Route('/api/teams/update', self.receive_team_feed_update, methods=['POST']),
+            Route('/api/teams/feed_event', self.event_team_feed, methods=['GET']),
         ]
 
         super().__init__(
