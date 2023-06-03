@@ -36,7 +36,7 @@ feed.onmessage = async (ev) => {
             team = 'No Current Team';
         }
 
-        const team_id = team.replace(/\s+/g, '-').toLowerCase();
+        const team_id = `A-${team.replace(/\s+/g, '-').toLowerCase()}-B`;
 
         const teamContainerHTML = `
             <div class="teamContainer" id=${team_id}>
