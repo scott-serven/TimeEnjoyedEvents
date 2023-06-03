@@ -78,3 +78,7 @@ body, html {
     border: 0;
     height: 2px;
 }
+
+.teamMemberPopover > b:not(:first-child) {
+    margin-top: 1.5rem;
+}
