@@ -29,6 +29,7 @@ from typing import Any
 
 import asyncpg
 import discord
+from markupsafe import escape
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
@@ -115,18 +116,18 @@ class Server(Starlette):
             return Response(status_code=401)
 
         data: dict[str, Any] = await request.json()
-        to_send: dict[str, Any] = {'team': {'name': team['name']}}
+        to_send: dict[str, Any] = {'team': {'name': escape(team['name'])}}
 
         try:
             data['commits']
         except KeyError:
             return Response(status_code=200)
 
-        sender: dict[str, str] = {'name': data['sender']['login'], 'avatar': data['sender']['avatar_url']}
+        sender: dict[str, str] = {'name': escape(data['sender']['login']), 'avatar': data['sender']['avatar_url']}
         commits: list[dict[str, str]] = []
 
         for commit in data['commits']:
-            commit_: dict[str, str] = {'author': commit['author']['name'], 'message': commit['message']}
+            commit_: dict[str, str] = {'author': escape(commit['author']['name']), 'message': escape(commit['message'])}
             commits.append(commit_)
 
         to_send.update(sender=sender, commits=commits[0:5], commit_length=len(commits))
@@ -145,7 +146,7 @@ class Server(Starlette):
 
             dmember: discord.Member = guild.get_member(member['member_id'])
             member_data: dict[str, str | bool] = {
-                'name': dmember.display_name,
+                'name': escape(dmember.display_name),
                 'avatar': dmember.display_avatar.url,
                 'languages': member['languages'],
                 'timezone': member['timezone'].total_seconds() / (60 * 60),
@@ -154,9 +155,9 @@ class Server(Starlette):
 
             try:
                 # name is actually team name...
-                data[member['name']].append(member_data)
+                data[escape(member['name'])].append(member_data)
             except KeyError:
-                data[member['name']] = [member_data]
+                data[escape(member['name'])] = [member_data]
 
         return data
 
