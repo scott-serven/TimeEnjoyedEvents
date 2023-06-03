@@ -145,6 +145,9 @@ class Server(Starlette):
         for member in members:
 
             dmember: discord.Member = guild.get_member(member['member_id'])
+            if dmember is None:
+                continue
+
             member_data: dict[str, str | bool] = {
                 'name': escape(dmember.display_name),
                 'avatar': dmember.display_avatar.url,
