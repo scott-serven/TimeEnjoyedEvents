@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +8,61 @@
     <link rel="stylesheet" href="styles.css">
     <script src="scripts.js"></script>
 </head>
-<body>
-    <div class="container">
-        <h2>CodeJam Team Feed</h2>
-
-    </div>
+<body class="scrollableContainer">
+<div id="memberInfoPopup">
+    <section>
+        <header>Languages</header>
+        <div id="memberLanguages"></div>
+    </section>
+    <section>
+        <header>Time Zone</header>
+        <div id="memberTimeZone"></div>
+    </section>
+</div>
+</div>
+<main>
+    <section class="teamsSidebar">
+        <header>Teams</header>
+        <div class="scrollableContainer teamsInnerContainer"></div>
+    </section>
+    <section class="lfgContainer">
+        <header>Looking for Team</header>
+        <div class="clippedContainer lfgInnerContainer">
+            <div class="timeZoneLines">
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+                <div class="timeZoneBar"></div>
+            </div>
+            <div class="scrollableContainer  unassignedMembers"></div>
+        </div>
+    </section>
+    <section class="soloContainer">
+        <header>Solo</header>
+        <div class="scrollableContainer soloInnerContainer"></div>
+    </section>
+</main>
+<footer></footer>
 </body>
 </html>

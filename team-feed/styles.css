@@ -1,6 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
+:root {
+    --footer-height: 100px;
+    --section-header-height: 30px;
+    --timezone-padding: 25px;
+}
+
 body, html {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
@@ -9,24 +19,196 @@ body, html {
     color: #F0B7B1;
 }
 
-.container {
+main {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: calc(100vh - var(--footer-height));
+}
+
+.scrollableContainer {
+    -ms-overflow-style: none; /* for Internet Explorer, Edge */
+    overflow-y: scroll;
+    scrollbar-width: none; /* for firefox */
+}
+
+.scrollableContainer::-webkit-scrollbar {
+    display: none; /* for Chrome, Safari, and Opera */
+}
+
+section .teamsSidebar,
+section .soloContainer {
+    flex: 0 1 auto;
+}
+
+section .lfgContainer {
+    flex: 1 1 auto;
+}
+
+main section header {
+    flex: 0 0 auto;
+    width: 100%;
+    height: var(--section-header-height);
+    text-align: center;
+    font-size: 1.5em;
+    padding: 10px 0 0 0;
+}
+
+body footer {
+    display: flex;
+    flex-direction: row;
+    gap: 4rem;
+    width: 100vw;
+    height: var(--footer-height);
+    background-color: #181818;
+    align-items: center;
+    padding: 0 30px;
+    border-top: 1px solid #666;
+}
+
+.teamsSidebar {
+    flex: 0 1 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: auto;
-    width: 80%;
-    padding: 4rem 0;
+    background-color: #222;
 }
 
+.teamsInnerContainer {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* container for a single team */
 .teamContainer {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: 1rem 0;
-    width: 100%;
+    flex-direction: column;
     justify-content: center;
-    gap: 1rem 4rem;
+    gap: 1rem;
+    border-radius: 8px;
+    border: 1px solid #666;
+    padding: 10px 10px 20px 10px;
 }
+
+.teamContainer header {
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: bold;
+}
+
+.lfgContainer {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url('/world.jpg');
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-blend-mode: normal;
+    border-right: 1px solid #000;
+    border-left: 1px solid #000;
+    overflow: hidden;
+}
+
+.clippedContainer {
+    overflow: hidden;
+}
+
+.lfgInnerContainer {
+    width: calc(100% - (var(--timezone-padding) * 2));
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: var(--timezone-padding);
+    position: relative;
+}
+
+.timeZoneLines,
+.unassignedMembers {
+    position: absolute;
+    top: var(--timezone-padding);
+    left: var(--timezone-padding);
+    display: flex;
+    flex-direction: row;
+    width: calc(100% - (var(--timezone-padding) * 2));
+    height: calc(100% - (var(--timezone-padding) * 2));
+}
+
+.absMemberContainer {
+    position: absolute;
+    width: 4%;
+}
+
+.timeZoneLines {
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.timeZoneBar {
+    border-right: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.timeZoneBar {
+    width: calc(100% / 25);
+    height: 100%;
+}
+
+.soloContainer {
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+    background-color: #222;
+}
+
+.soloInnerContainer {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#memberInfoPopup {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+
+    visibility: hidden;
+
+    background: rgb(0,0,0);
+    background: linear-gradient(352deg, rgba(0,0,0,1) 0%, rgba(84,84,84,1) 100%);
+    color: #F0B7B1;
+    width: auto;
+    padding: 1rem;
+    font-size: small;
+    font-weight: lighter;
+    border-radius: 10px;
+    border: 1px solid #999;
+    /*box-shadow: 0 0 8px 8px rgba(255, 255, 255, 0.1);*/
+    text-overflow: ellipsis;
+}
+
+#memberInfoPopup section header {
+    font-weight: bold;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #999;
+    margin-bottom: 0.5rem;
+}
+
+#memberLanguages {
+    display: flex;
+    flex-direction: column;
+}
+
+#memberLanguages ul {
+    padding: 0 1rem;
+    margin: 0.25rem;
+}
+
 
 .teamMemberContainer {
     display: flex;
@@ -36,49 +218,20 @@ body, html {
     font-size: small;
 }
 
+.teamMemberImage:hover {
+    border: 2px solid #fff;
+    box-shadow: 0 0 8px 8px rgba(255,255,255,0.1);
+    transform: scale(1.25, 1.25);
+    transition: all 0.1s linear;
+}
+
 .teamMemberImage {
-    height: 64px;
-    width: auto;
-    border-radius: 32px;
-    margin-bottom: 0.5rem;
-}
-
-.teamHeader {
-    min-width: 100%;
-    text-align: center;
-    color: #F0B7B1;
-}
-
-.teamMemberPopover {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    background-color: #2a2a2a;
-    color: #F0B7B1;
-    width: auto;
-    padding: 1rem;
-    font-size: small;
-    font-weight: lighter;
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-}
-
-.teamMemberContainer:hover .teamMemberPopover {
-    z-index: 1;
-    opacity: 1;
-    visibility: visible;
-    transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
-    cursor: pointer;
-}
-
-.teamMemberPopover > hr {
     width: 100%;
-    background-color: rgba(192, 192, 192, 0.2);
-    border: 0;
-    height: 2px;
+    max-width: 48px;
+    min-width: 24px;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+    border: 2px solid #333;
 }
 
-.teamMemberPopover > b:not(:first-child) {
-    margin-top: 1.5rem;
-}
+
