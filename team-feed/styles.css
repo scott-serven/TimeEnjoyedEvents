@@ -3,7 +3,9 @@
 :root {
     --footer-height: 100px;
     --section-header-height: 30px;
-    --timezone-padding: 25px;
+    --lfg-outer-container-padding: 25px;
+    --timezones: 25;
+    --lfg-column-gap: 6.5em;
 }
 
 body, html {
@@ -50,20 +52,30 @@ main section header {
     width: 100%;
     height: var(--section-header-height);
     text-align: center;
-    font-size: 1.5em;
+    font-size: 1.25rem;
     padding: 10px 0 0 0;
 }
 
-body footer {
-    display: flex;
-    flex-direction: row;
-    gap: 4rem;
-    width: 100vw;
-    height: var(--footer-height);
-    background-color: #181818;
-    align-items: center;
-    padding: 0 30px;
-    border-top: 1px solid #666;
+.infoIcon {
+    display: inline;
+}
+
+.infoPanel {
+    visibility: hidden;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #999;
+    font-size: 1rem;
+    z-index: 10;
+    max-width: 25%;
+    background: rgb(0,0,0);
+    background: linear-gradient(352deg, rgba(0,0,0,1) 0%, rgba(84,84,84,1) 100%);
+    position: relative;
+    left: 50%;
+}
+
+.infoIcon:hover .infoPanel {
+    visibility: visible;
 }
 
 .teamsSidebar {
@@ -75,7 +87,7 @@ body footer {
 }
 
 .teamsInnerContainer {
-    padding: 15px;
+    padding: 25px 15px;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -94,9 +106,9 @@ body footer {
 
 .teamContainer header {
     text-align: center;
-    font-size: 1.15rem;
-    font-weight: bold;
+    font-size: 1.0rem;
 }
+
 
 .lfgContainer {
     flex: 1 1 auto;
@@ -104,6 +116,7 @@ body footer {
     flex-direction: column;
     align-items: center;
     background-image: url('world.jpg');
+    background-color: #1f1f1f;
     background-repeat: no-repeat;
     background-size: 100% auto;
     background-blend-mode: normal;
@@ -117,28 +130,33 @@ body footer {
 }
 
 .lfgInnerContainer {
-    width: calc(100% - (var(--timezone-padding) * 2));
+    width: calc(100% - (var(--lfg-outer-container-padding) * 2));
     height: 100%;
     display: flex;
     flex-direction: row;
-    padding: var(--timezone-padding);
+    padding: var(--lfg-outer-container-padding);
     position: relative;
+    container: lfgInnerContainer / size;
 }
 
 .timeZoneLines,
 .unassignedMembers {
     position: absolute;
-    top: var(--timezone-padding);
-    left: var(--timezone-padding);
+    top: var(--lfg-outer-container-padding);
+    left: var(--lfg-outer-container-padding);
     display: flex;
     flex-direction: row;
-    width: calc(100% - (var(--timezone-padding) * 2));
-    height: calc(100% - (var(--timezone-padding) * 2));
+    width: calc(100% - (var(--lfg-outer-container-padding) * 2));
+    height: calc(100% - (var(--lfg-outer-container-padding) * 2));
 }
 
-.absMemberContainer {
-    position: absolute;
-    width: 4%;
+.lfgMemberColumn {
+    width: calc(100% / var(--timezones));
+    min-width: calc(100% / var(--timezones));
+    max-width: calc(100% / var(--timezones));
+    display: flex;
+    flex-direction: column;
+    gap: var(--lfg-column-gap);
 }
 
 .timeZoneLines {
@@ -147,10 +165,7 @@ body footer {
 
 .timeZoneBar {
     border-right: 1px dashed rgba(255, 255, 255, 0.1);
-}
-
-.timeZoneBar {
-    width: calc(100% / 25);
+    width: calc(100% / var(--timezones));
     height: 100%;
 }
 
@@ -170,15 +185,114 @@ body footer {
     gap: 1rem;
 }
 
+.teamMemberContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: auto;
+}
+
+.teamMemberImage {
+    width: 100%;
+    min-width: 24px;
+    border-radius: 50%;
+    border: 2px solid #333;
+}
+
+.teamMemberImage:hover {
+    border: 2px solid #fff;
+    box-shadow: 0 0 8px 8px rgba(255,255,255,0.1);
+    transform: scale(1.25, 1.25);
+    transition: all 0.1s linear;
+}
+
+.teamsSidebar .teamMemberImage,
+.soloContainer .teamMemberImage,
+.codeJamManagers .teamMemberImage
+{
+    max-width: 40px;
+}
+
+.teamMemberName {
+    text-overflow: clip;
+    overflow: hidden;
+    cursor: default;
+}
+
+.teamContainer, .soloContainer, .codeJamManagers {
+    font-size: 0.8rem;
+}
+
+@container lfgInnerContainer (width <= 600px)  {
+    .lfgMemberColumn {
+        font-size: 0.5rem;
+    }
+    .teamMemberName {
+        text-overflow: ellipsis;
+        max-width: 40px;
+    }
+}
+
+@container lfgInnerContainer (width > 600px) and (width <= 700px) {
+    .lfgMemberColumn {
+        font-size: 0.5rem;
+    }
+}
+
+@container lfgInnerContainer (width > 700px) and (width <= 900px) {
+    .lfgMemberColumn {
+        font-size: 0.6rem;
+    }
+}
+@container lfgInnerContainer (width > 900px) and (width <= 1100px) {
+    .lfgMemberColumn {
+        font-size: 0.7rem;
+    }
+}
+
+@container lfgInnerContainer (width > 1100px) and (width <= 1300px) {
+    .lfgMemberColumn {
+        font-size: 0.8rem;
+    }
+}
+
+@container lfgInnerContainer (width > 1300px) and (width <= 1500px) {
+    .lfgMemberColumn {
+        font-size: 0.9rem;
+    }
+}
+
+@container lfgInnerContainer (width > 1500px) and (width <= 1700px) {
+    .lfgMemberColumn {
+        font-size: 1.0rem;
+    }
+}
+
+@container lfgInnerContainer (width > 1700px) {
+    .lfgMemberColumn {
+        font-size: 1.25rem;
+    }
+}
+
+.codeJamManagers {
+    display: flex;
+    flex-direction: row;
+    gap: 4rem;
+    height: var(--footer-height);
+    background-color: #181818;
+    padding-left: 30px;
+    align-items: center;
+    border-top: 1px solid #666;
+}
+
 #memberInfoPopup {
     position: absolute;
     z-index: 1;
     display: flex;
-    flex-direction: row;
-    column-gap: 1rem;
-
+    flex-direction: column;
+    row-gap: 1rem;
     visibility: hidden;
-
     background: rgb(0,0,0);
     background: linear-gradient(352deg, rgba(0,0,0,1) 0%, rgba(84,84,84,1) 100%);
     color: #F0B7B1;
@@ -188,8 +302,17 @@ body footer {
     font-weight: lighter;
     border-radius: 10px;
     border: 1px solid #999;
-    /*box-shadow: 0 0 8px 8px rgba(255, 255, 255, 0.1);*/
     text-overflow: ellipsis;
+}
+
+#memberInfoPopupHeader {
+    font-size: 1.25rem;
+}
+
+#memberInfoPopup summary {
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
 }
 
 #memberInfoPopup section header {
@@ -208,30 +331,4 @@ body footer {
     padding: 0 1rem;
     margin: 0.25rem;
 }
-
-
-.teamMemberContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-weight: bold;
-    font-size: small;
-}
-
-.teamMemberImage:hover {
-    border: 2px solid #fff;
-    box-shadow: 0 0 8px 8px rgba(255,255,255,0.1);
-    transform: scale(1.25, 1.25);
-    transition: all 0.1s linear;
-}
-
-.teamMemberImage {
-    width: 100%;
-    max-width: 48px;
-    min-width: 24px;
-    border-radius: 50%;
-    margin-bottom: 0.5rem;
-    border: 2px solid #333;
-}
-
 
