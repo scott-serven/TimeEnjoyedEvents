@@ -10,15 +10,17 @@
 </head>
 <body class="scrollableContainer">
 <div id="memberInfoPopup">
-    <section>
-        <header>Languages</header>
-        <div id="memberLanguages"></div>
-    </section>
-    <section>
-        <header>Time Zone</header>
-        <div id="memberTimeZone"></div>
-    </section>
-</div>
+    <header id="memberInfoPopupHeader"></header>
+    <summary>
+        <section>
+            <header>Languages</header>
+            <div id="memberLanguages"></div>
+        </section>
+        <section>
+            <header>Time Zone</header>
+            <div id="memberTimeZone"></div>
+        </section>
+    </summary>
 </div>
 <main>
     <section class="teamsSidebar">
@@ -26,7 +28,13 @@
         <div class="scrollableContainer teamsInnerContainer"></div>
     </section>
     <section class="lfgContainer">
-        <header>Looking for Team</header>
+        <header>Looking for Team
+            <div class="infoIcon">ⓘ
+                <div class="infoPanel">
+                    <p>These are only rough approximations of time zones.  It is only meant to help identify potential teammates in similar time zone to your own.</p>
+                </div>
+            </div>
+        </header>
         <div class="clippedContainer lfgInnerContainer">
             <div class="timeZoneLines">
                 <div class="timeZoneBar"></div>
@@ -63,6 +71,6 @@
         <div class="scrollableContainer soloInnerContainer"></div>
     </section>
 </main>
-<footer></footer>
+<section class="codeJamManagers"></section>
 </body>
 </html>
