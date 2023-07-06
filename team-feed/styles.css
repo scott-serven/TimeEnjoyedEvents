@@ -1,12 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=optional');
 
 :root {
-    --footer-height: 100px;
-    --section-header-height: 30px;
-    --timezone-padding: 25px;
+    --footer-height: 8em;
+    --section-header-height: 2em;
+    --lfg-outer-container-padding: 1em;
+    --lfg-column-gap: 6.5em;
+    --timezone-width: 4%;
 }
 
-body, html {
+html {
+    font-size: 16pt;
+}
+
+body {
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -17,6 +23,12 @@ body, html {
     background-color: rgb(38, 38, 38);
     font-family: 'Share Tech Mono', monospace;
     color: #F0B7B1;
+    container: bodyContainer / size;
+}
+
+#preloadContainer {
+    opacity: 0;
+    transition: opacity 0.25s linear;
 }
 
 main {
@@ -36,17 +48,8 @@ main {
     display: none; /* for Chrome, Safari, and Opera */
 }
 
-section .teamsSidebar,
-section .soloContainer {
-    flex: 0 1 auto;
-}
-
-section .lfgContainer {
-    flex: 1 1 auto;
-}
-
 main section header {
-    flex: 0 0 auto;
+    /*!*flex: 0 0 auto;*!*/
     width: 100%;
     height: var(--section-header-height);
     text-align: center;
@@ -54,20 +57,31 @@ main section header {
     padding: 10px 0 0 0;
 }
 
-body footer {
-    display: flex;
-    flex-direction: row;
-    gap: 4rem;
-    width: 100vw;
-    height: var(--footer-height);
-    background-color: #181818;
-    align-items: center;
-    padding: 0 30px;
-    border-top: 1px solid #666;
+.infoIcon {
+    display: inline;
+    font-size: 0.8em;
+}
+
+.infoPanel {
+    visibility: hidden;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #999;
+    font-size: 0.75rem;
+    z-index: 10;
+    max-width: 25%;
+    background: rgb(0,0,0);
+    background: linear-gradient(352deg, rgba(0,0,0,1) 0%, rgba(84,84,84,1) 100%);
+    position: relative;
+    left: 50%;
+}
+
+.infoIcon:hover .infoPanel {
+    visibility: visible;
 }
 
 .teamsSidebar {
-    flex: 0 1 auto;
+    min-width: 12em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -75,10 +89,10 @@ body footer {
 }
 
 .teamsInnerContainer {
-    padding: 15px;
     display: flex;
+    padding: 0.75em;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1em;
 }
 
 /* container for a single team */
@@ -86,16 +100,16 @@ body footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 1rem;
+    gap: 1em;
     border-radius: 8px;
     border: 1px solid #666;
-    padding: 10px 10px 20px 10px;
+    padding: 0.5em;
 }
 
 .teamContainer header {
-    text-align: center;
-    font-size: 1.15rem;
-    font-weight: bold;
+    font-size: 1.25em;
+    height: auto;
+    padding: 0;
 }
 
 .lfgContainer {
@@ -104,6 +118,7 @@ body footer {
     flex-direction: column;
     align-items: center;
     background-image: url('world.jpg');
+    background-color: #1f1f1f;
     background-repeat: no-repeat;
     background-size: 100% auto;
     background-blend-mode: normal;
@@ -117,79 +132,146 @@ body footer {
 }
 
 .lfgInnerContainer {
-    width: calc(100% - (var(--timezone-padding) * 2));
+    width: calc(100% - (var(--lfg-outer-container-padding) * 2));
     height: 100%;
     display: flex;
     flex-direction: row;
-    padding: var(--timezone-padding);
     position: relative;
 }
 
 .timeZoneLines,
 .unassignedMembers {
     position: absolute;
-    top: var(--timezone-padding);
-    left: var(--timezone-padding);
+    padding: var(--lfg-outer-container-padding);
     display: flex;
     flex-direction: row;
-    width: calc(100% - (var(--timezone-padding) * 2));
-    height: calc(100% - (var(--timezone-padding) * 2));
+    width: calc(100% - (var(--lfg-outer-container-padding) * 2));
+    height: calc(100% - (var(--lfg-outer-container-padding) * 2));
 }
 
-.absMemberContainer {
-    position: absolute;
-    width: 4%;
-}
-
-.timeZoneLines {
-    border: 1px dashed rgba(255, 255, 255, 0.1);
+.lfgMemberColumn {
+    width: var(--timezone-width);
+    min-width: var(--timezone-width);
+    max-width: var(--timezone-width);
+    display: flex;
+    flex-direction: column;
+    gap: var(--lfg-column-gap);
 }
 
 .timeZoneBar {
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
     border-right: 1px dashed rgba(255, 255, 255, 0.1);
-}
-
-.timeZoneBar {
-    width: calc(100% / 25);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    width: var(--timezone-width);
     height: 100%;
 }
 
+.timeZoneBar:first-child {
+    border-left: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
 .soloContainer {
-    flex: 0 1 auto;
+    /*flex: 1 1 auto;*/
+    min-width: 10em;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1em;
     align-items: center;
     background-color: #222;
 }
 
 .soloInnerContainer {
-    padding: 20px;
+    padding: 1em;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1em;
+}
+
+.teamMemberContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 0.5s linear;
+}
+
+.teamMemberImage {
+    width: 90%;
+    min-width: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0);
+}
+
+.teamMemberImage:hover {
+    border: 2px solid #fff;
+    box-shadow: 0 0 8px 8px rgba(255,255,255,0.1);
+    transform: scale(1.25, 1.25);
+    transition: all 0.1s linear;
+}
+
+.teamsSidebar .teamMemberImage,
+.soloContainer .teamMemberImage,
+#codeJamManagers .teamMemberImage
+{
+    max-width: 3.3em;
+}
+
+.teamMemberName {
+    text-overflow: clip;
+    overflow: hidden;
+    cursor: default;
+}
+
+body footer {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    background-color: #181818;
+    height: var(--footer-height);
+    border-top: 1px solid #666;
+}
+
+#codeJamManagers {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: row;
+    gap: 4em;
+    padding-left: 30px;
+    align-items: center;
+}
+
+#stats {
+
 }
 
 #memberInfoPopup {
     position: absolute;
     z-index: 1;
     display: flex;
-    flex-direction: row;
-    column-gap: 1rem;
-
+    flex-direction: column;
+    row-gap: 1rem;
     visibility: hidden;
-
     background: rgb(0,0,0);
     background: linear-gradient(352deg, rgba(0,0,0,1) 0%, rgba(84,84,84,1) 100%);
     color: #F0B7B1;
     width: auto;
-    padding: 1rem;
+    padding: 1em;
     font-size: small;
     font-weight: lighter;
     border-radius: 10px;
     border: 1px solid #999;
-    /*box-shadow: 0 0 8px 8px rgba(255, 255, 255, 0.1);*/
     text-overflow: ellipsis;
+}
+
+#memberInfoPopupHeader {
+    font-size: 1.25em;
+}
+
+#memberInfoPopup summary {
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
 }
 
 #memberInfoPopup section header {
@@ -206,32 +288,17 @@ body footer {
 
 #memberLanguages ul {
     padding: 0 1rem;
-    margin: 0.25rem;
+    margin: 0.1rem;
 }
 
-
-.teamMemberContainer {
+#stats {
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    font-weight: bold;
-    font-size: small;
+    justify-content: right;
+    padding: 1em 20px;
 }
 
-.teamMemberImage:hover {
-    border: 2px solid #fff;
-    box-shadow: 0 0 8px 8px rgba(255,255,255,0.1);
-    transform: scale(1.25, 1.25);
-    transition: all 0.1s linear;
+.stat {
+    font-size: 1.2em;
 }
-
-.teamMemberImage {
-    width: 100%;
-    max-width: 48px;
-    min-width: 24px;
-    border-radius: 50%;
-    margin-bottom: 0.5rem;
-    border: 2px solid #333;
-}
-
-
