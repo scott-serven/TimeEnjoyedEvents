@@ -1,6 +1,5 @@
 const feed = new EventSource('https://codejam.timeenjoyed.dev/api/teams/feed_event');
 
-
 const langs = {
     0: 'No Preference',
     1: 'Python',
@@ -21,6 +20,30 @@ const langs = {
     16: 'Dart',
     17: 'PHP',
     18: 'Other...'
+}
+
+let memberContainerWatches = [];
+
+window.addEventListener('resize', resizeHandler);
+window.addEventListener('load', () => {
+    resizeHandler();
+})
+
+
+// smoothly scale entire site
+let firstResize = true;
+function resizeHandler() {
+    let body = document.querySelector('body');
+    body.style.fontSize = Math.max(window.innerWidth / 2500, 0.2) + 'rem';
+    if (firstResize === true) {
+        // hacky delay to give the browser a chance to do its layout based on the new size and avoid shifts
+        let interval = setInterval(() => {
+            let preloadContainer = document.querySelector('#preloadContainer');
+            preloadContainer.style.opacity = '1.0';
+            clearInterval(interval);
+        }, 100);
+        firstResize = false;
+    }
 }
 
 function showPopup(e, member) {
@@ -76,16 +99,13 @@ function closePopup(e) {
 
 function formatMember(member) {
     return `
-        <img class="teamMemberImage" src="${member['avatar']}"/>
+        <img class="teamMemberImage" src="${member['avatar']}" alt="${member['name']}"/>
         <div class="teamMemberName">${member['name']}</div>
     `;
 }
 
 function addMemberPopupEvents(memberContainer, member) {
     const memberHoverElement = memberContainer.querySelector('.teamMemberImage');
-    memberHoverElement.addEventListener('click', (event) => {
-        showPopup(event, member);
-    });
     memberHoverElement.addEventListener('mouseenter', (event) => {
         showPopup(event, member);
     });
@@ -100,6 +120,7 @@ function createMemberContainer(parent, member) {
     memberContainer.innerHTML = formatMember(member);
     parent.appendChild(memberContainer);
     addMemberPopupEvents(memberContainer, member);
+    memberContainerWatches.push(memberContainer);
     return memberContainer;
 }
 
@@ -118,16 +139,22 @@ function updateLookingForGroupData(data) {
 
     for (let team in data) {
         const members = data[team];
-        if (team === "None") {
-            for (let member of members) {
-                if (member['solo'] === false) {
-                    let tzColIndex = member['timezone'] + 12;
-                    createMemberContainer(tzColumns[tzColIndex], member);
-                    tzColumns[tzColIndex].style.paddingTop = (tzColIndex % 2 === 0 ? '1em' : '7em');
-                }
+        if (team !== "None") {
+            continue;
+        }
+
+        for (let member of members) {
+            if (member['solo'] === false) {
+                let tzColIndex = member['timezone'] + 12;
+                createMemberContainer(tzColumns[tzColIndex], member);
+                tzColumns[tzColIndex].style.paddingTop = (tzColIndex % 2 === 0 ? '1em' : '7em');
             }
         }
     }
+}
+
+function isTeamAllSolo(team) {
+    return team.reduce((acc, curr) => acc && curr['solo'], true);
 }
 
 function updateTeamData(data) {
@@ -139,7 +166,7 @@ function updateTeamData(data) {
 
         if ((team !== "None") && (team !== "CodeJam Managers")) {
             // teams that consist of only one member that's a "solo" member, doesn't count as a team
-            let allSoloTeam = members.reduce((acc, curr) => acc && curr['solo'], true);
+            let allSoloTeam = isTeamAllSolo(members);
             if (!allSoloTeam) {
                 const teamDiv = document.createElement('div');
                 teamDiv.className = 'teamContainer';
@@ -160,16 +187,18 @@ function updateSoloData(data) {
     for (let team in data) {
         const members = data[team];
 
-        if (team !== "CodeJam Managers") {
-            let allSoloTeam = true;
-            if (team !== "None") {
-                allSoloTeam = members.reduce((acc, curr) => acc && curr['solo'], true);
-            }
-            if (allSoloTeam) {
-                for (let member of members) {
-                    if (member['solo'] === true) {
-                        createMemberContainer(container, member);
-                    }
+        if (team === "CodeJam Managers") {
+            continue;
+        }
+
+        let allSoloTeam = true;
+        if (team !== "None") {
+            allSoloTeam = isTeamAllSolo(members);
+        }
+        if (allSoloTeam) {
+            for (let member of members) {
+                if (member['solo'] === true) {
+                    createMemberContainer(container, member);
                 }
             }
         }
@@ -177,7 +206,7 @@ function updateSoloData(data) {
 }
 
 function updateCodeJamManagers(data) {
-    const container = document.querySelector('.codeJamManagers');
+    const container = document.querySelector('#codeJamManagers');
     container.innerHTML = '<h3>CodeJam Managers</h3>';
 
     for (let team in data) {
@@ -191,11 +220,74 @@ function updateCodeJamManagers(data) {
     }
 }
 
-feed.onmessage = async (ev) => {
-    const data = JSON.parse(ev.data);
+function updateStats(data) {
+    let stats = document.querySelector('#stats');
+    let teamMemberCount = 0;
+    let teamCount = 0;
+    let lfgCount = 0;
+    let soloCount = 0;
 
+    for (let team in data) {
+        if (team === 'CodeJam Managers') {
+            continue;
+        }
+        const members = data[team];
+        if (isTeamAllSolo(members)) {
+            soloCount += 1;
+            continue;
+        }
+        if (team !== 'None') {
+            teamCount += 1;
+        }
+
+        for (let member of members) {
+            if (member['solo'] === true) {
+                soloCount += 1;
+            } else {
+                if (team === 'None') {
+                    lfgCount += 1;
+                } else {
+                    teamMemberCount += 1;
+                }
+            }
+        }
+    }
+    let totalCount = teamMemberCount + lfgCount + soloCount;
+    stats.innerHTML = `
+        <span class="stat">${teamMemberCount} members in ${teamCount} teams</span>
+        <span class="stat">${lfgCount} looking for team</span>
+        <span class="stat">${soloCount} going solo</span>
+        <span class="stat">${totalCount} total participants</span>
+    `;
+}
+
+// Sometimes the images are slow to load from Discord's CDN, so just make them visible once they're loaded
+function fadeInMembers() {
+    let watcher = setInterval(() => {
+        let toRemove = [];
+        for (let watch of memberContainerWatches) {
+            let img = watch.querySelector('.teamMemberImage');
+            if ((img) && (img.complete)) {
+                watch.style.opacity = '1.0';
+                toRemove.push(watch);
+            }
+        }
+        for (let item of toRemove) {
+            memberContainerWatches.splice(memberContainerWatches.indexOf(item), 1);
+        }
+        if (memberContainerWatches.length === 0) {
+            clearInterval(watcher);
+        }
+    }, 25);
+}
+
+feed.onmessage = async (ev) => {
+    memberContainerWatches = [];
+    const data = JSON.parse(ev.data);
     updateTeamData(data);
     updateLookingForGroupData(data);
     updateSoloData(data);
     updateCodeJamManagers(data);
+    updateStats(data);
+    fadeInMembers();
 }

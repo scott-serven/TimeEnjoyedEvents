@@ -59,6 +59,8 @@ class Bot(commands.Bot):
         modules: list[str] = [f'{p.parent}.{p.stem}' for p in pathlib.Path('bot/modules').glob('*.py')]
         modules: list[str] = [s.replace('/', '.').replace('\\', '.') for s in modules]
 
+        await self.load_extension('jishaku')
+
         for module in modules:
             await self.load_extension(module)
 

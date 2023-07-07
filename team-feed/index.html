@@ -9,68 +9,73 @@
     <script src="scripts.js"></script>
 </head>
 <body class="scrollableContainer">
-<div id="memberInfoPopup">
-    <header id="memberInfoPopupHeader"></header>
-    <summary>
-        <section>
-            <header>Languages</header>
-            <div id="memberLanguages"></div>
+<div id="preloadContainer">
+    <div id="memberInfoPopup">
+        <header id="memberInfoPopupHeader"></header>
+        <summary>
+            <section>
+                <header>Languages</header>
+                <div id="memberLanguages"></div>
+            </section>
+            <section>
+                <header>Time Zone</header>
+                <div id="memberTimeZone"></div>
+            </section>
+        </summary>
+    </div>
+    <main>
+        <section class="teamsSidebar">
+            <header>Teams</header>
+            <div class="scrollableContainer teamsInnerContainer"></div>
         </section>
-        <section>
-            <header>Time Zone</header>
-            <div id="memberTimeZone"></div>
-        </section>
-    </summary>
-</div>
-<main>
-    <section class="teamsSidebar">
-        <header>Teams</header>
-        <div class="scrollableContainer teamsInnerContainer"></div>
-    </section>
-    <section class="lfgContainer">
-        <header>Looking for Team
-            <div class="infoIcon">ⓘ
-                <div class="infoPanel">
-                    <p>These are only rough approximations of time zones.  It is only meant to help identify potential teammates in similar time zone to your own.</p>
+        <section class="lfgContainer">
+            <header>Looking for Team
+                <div class="infoIcon">ⓘ
+                    <div class="infoPanel">
+                        <p>These are only rough approximations of time zones.  It is only meant to help identify potential teammates in a similar time zone to your own.</p>
+                    </div>
                 </div>
+            </header>
+            <div class="clippedContainer lfgInnerContainer">
+                <div class="timeZoneLines">
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                    <div class="timeZoneBar"></div>
+                </div>
+                <div class="scrollableContainer  unassignedMembers"></div>
             </div>
-        </header>
-        <div class="clippedContainer lfgInnerContainer">
-            <div class="timeZoneLines">
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-                <div class="timeZoneBar"></div>
-            </div>
-            <div class="scrollableContainer  unassignedMembers"></div>
-        </div>
-    </section>
-    <section class="soloContainer">
-        <header>Solo</header>
-        <div class="scrollableContainer soloInnerContainer"></div>
-    </section>
-</main>
-<section class="codeJamManagers"></section>
+        </section>
+        <section class="soloContainer">
+            <header id="soloHeader">Solo</header>
+            <div class="scrollableContainer soloInnerContainer"></div>
+        </section>
+    </main>
+    <footer>
+        <section id="codeJamManagers"></section>
+        <section id="stats"></section>
+    </footer>
+</div>
 </body>
 </html>
